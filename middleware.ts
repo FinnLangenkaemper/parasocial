@@ -1,4 +1,4 @@
-import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs";
+/*import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function middleware(req: NextRequest) {
@@ -12,11 +12,15 @@ export async function middleware(req: NextRequest) {
         }
     } = await supabase.auth.getSession()
 
-    if(session) console.log(session)
+    
+
+    if(session){ console.log(session) }
 
     if (!session){
         return NextResponse.rewrite(new URL('/login', req.url))
     }
+
+    return res
 }
 
 
@@ -24,4 +28,4 @@ export const config = {
     matcher: [
         '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'
     ]
-}
+}*/
