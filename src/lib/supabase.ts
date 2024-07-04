@@ -1,6 +1,11 @@
 import { createClient } from '@supabase/supabase-js'
 
+export const supabaseService = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY!,
+)
+
 export const supabase = createClient(
-    process.env.PUBLIC_SUPABASE_PROJECT_URL!,
-    process.env.SECRET_SUPABASE_API_KEY_SERVICE!,
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 )

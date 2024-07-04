@@ -1,5 +1,6 @@
 export interface YoutubeVideo {
-    videoId: string,
+    videoUrl: string,
     title: string,
-    thumbnailUrl: string
+    thumbnailUrl: string,
+    channelName: string,
 } 
