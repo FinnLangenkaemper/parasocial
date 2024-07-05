@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next src/scripts/populateDbRunner.ts",
+    "start": "next src/scripts/runDbRunner.tsx",
     "lint": "next lint"
   },
   "dependencies": {
