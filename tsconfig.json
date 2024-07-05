@@ -19,6 +19,7 @@
     ],
     "baseUrl": "./src",            // Add this line to support absolute imports
     "paths": {
+
       "@/utils/*": ["./utils/*"],
       "@/lib/*": ["./lib/*"],
       "@/config/*": ["./config/*"],
