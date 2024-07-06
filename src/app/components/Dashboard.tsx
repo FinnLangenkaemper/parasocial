@@ -1,59 +1,44 @@
-import { creators } from "@/config/creators"
-import { supabase } from "@/lib/supabase"
-import { error } from "console"
-import { useState, useEffect } from "react"
+import { supabase } from "@/lib/supabase";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-const Dashboard = ({userId}: {userId: string | undefined}) => {
-    const [ subbed, setSubbed ] = useState([])
-
-    useEffect(() => {
-        const checkedSubbed = async () => {
-            const { data, error } = await supabase
-                .from('users')
-                .select('subbed')
-                .eq('user_id', userId)
-                
-            if(error) {console.log('error while checking subbed', error)}
-            if(data) {
-                let subbedArr = data[0].subbed
-                if(subbedArr === null){
-                    console.log('no data yet')
-                } else {
-
-                    setSubbed(subbedArr)
-                }
-            }
-        }
-
-        checkedSubbed()
-
-    })
+const Dashboard = ({ userId, subbed }: { userId: string | undefined, subbed: string[] }) => {
+  const [creatorData, setCreatorData]: any = useState();
 
 
-    const handleSubscribe = async (creator: string) => {
-        console.log(creator)
-        console.log(userId)
+  //fetches youtube data for subbed creators
+useEffect(() => {
+    const fetchVideoData = async () => {
+      if (subbed.length > 0) {
+        const promises = subbed.map(async (creator) => {
+          const { data, error } = await supabase
+            .from('creators')
+            .select('creator, youtube')
+            .eq('creator', creator);
 
-        const updatedSubbed = [...subbed, creator]
+          if (error) {
+            console.log(`Error while fetching video data for ${creator}`, error);
+            return null;
+          }
+          return data[0];
+        });
 
-        const { error } = await supabase
-            .from('users')
-            .update({ subbed: updatedSubbed})
-            .eq('user_id', userId)
-        
-            if(error) console.log(error)
-    }
+        const results = await Promise.all(promises);
+        setCreatorData(results.filter(Boolean)); // Remove null results
+      }
+    };
+
+    fetchVideoData();
+  }, [subbed]); 
+
+
 
   return (
-    <div className="p-12 flex gap-4">
-        {creators.map((item, index) => {
-            return (
-            <button onClick={() => handleSubscribe(item.creator)} className="border-2 p-2 rounded-lg" key={index}>
-              {item.creator}
-            </button>)
-        })}
+    <div className="py-6">
+      <h1 className="py-4">Dashboard</h1>
+      <div>{creatorData.creator}</div>
     </div>
-  )
-}
+  );
+};
 
-export default Dashboard
+export default Dashboard;

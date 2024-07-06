@@ -5,8 +5,7 @@ import { supabase } from "@/lib/supabase";
 export const useLoginRedirect = () => {
   const router = useRouter();
 
-  useEffect(() => {
-    console.log("reload");
+  useEffect(() => { 
     async function getUserData() {
       await supabase.auth.getUser().then((value) => {
         if (value.data?.user) {
