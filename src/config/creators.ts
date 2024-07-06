@@ -1,18 +1,18 @@
 export const creators = [
   {
-    "creator": 'xqc',
+    "creator": 'xQc',
     "youtube": "UCmDTrq0LNgPodDOFZiSbsww",
     "twitch": "",
     "tiktok": ""
   },
   {
-    "creator": 'asmongold',
+    "creator": 'AsmongoldTV',
     "youtube": "UCQeRaTukNYft1_6AZPACnog",
     "twitch": "",
     "tiktok": ""
   },
   { 
-    "creator": 'ludwig',
+    "creator": 'Ludwig',
     "youtube": "UCrPseYLGpNygVi34QpGNqpA",
     "twitch": "",
     "tiktok": ""
