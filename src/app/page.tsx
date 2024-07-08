@@ -17,6 +17,9 @@ export default function Home() {
   const router = useRouter();
 
 
+ 
+
+
  useEffect(() => {
     const checkedSubbed = async () => {
       const { data, error } = await supabase
@@ -47,7 +50,7 @@ export default function Home() {
     };
 
     checkedSubbed();
-  });
+  }, []);
 
   useEffect(() => {
     async function getUserData() {
@@ -97,7 +100,7 @@ export default function Home() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCreatorData();
-    }, 15 * 60 * 1000);
+    }, 60 * 60 * 1000);
 
     return () => clearInterval(interval);
   }, []);
