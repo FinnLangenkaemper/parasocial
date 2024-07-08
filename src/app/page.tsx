@@ -4,24 +4,19 @@ import { supabase } from "@/lib/supabase";
 import { setCreatorData } from "@/scripts/populateDbRunner";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useLoginRedirect } from "@/hooks/login-redirect";
 import type { User } from "@supabase/supabase-js";
 import Following from "./components/Following";
-import Dashboard from "./components/Dashboard";
-import { checkUserExists } from "@/utils/user-funcs";
-
+import Dashboard from "./components/Dashboard"
 
 export default function Home() {
   const [user, setUser] = useState<User | null>(null);
-  const [subbed, setSubbed] = useState([]);
+  const [ loading, setLoading ] =  useState(false)
+  const [ subbedArr, setSubbedArr ] = useState<String[] |  null>(null)
   const router = useRouter();
-
-
- 
-
 
  useEffect(() => {
     const checkedSubbed = async () => {
+      setLoading(true)
       const { data, error } = await supabase
         .from("users")
         .select("subbed")
@@ -31,26 +26,22 @@ export default function Home() {
         console.log("error while checking subbed", error);
       }
 
-
       if (data && data[0] !== undefined) {
-        const subbedArr = data[0].subbed;
-        if (subbedArr === null) {
-          const { error } = await supabase
-            .from("users")
-            .update({ subbed: [] })
-            .eq("user_id", user?.id);
-
-          if (error) {
-            console.log(error);
-          }
-        } else {
-          setSubbed(subbedArr);
-        }
+          const subbed = data[0].subbed;
+          setLoading(false)
+          setSubbedArr(subbed)
       }
     };
 
-    checkedSubbed();
-  }, []);
+    if(user?.id) { //only runs once user id has been established
+       checkedSubbed()
+    }
+
+  }, [user?.id]);
+
+  if(subbedArr) console.log(subbedArr)
+
+
 
   useEffect(() => {
     async function getUserData() {
@@ -69,7 +60,7 @@ export default function Home() {
           if(error || data![0] === undefined) {  const populateUsers = async () => {
               const { error } = await supabase
                 .from("users")
-                .insert({ user_id: userData.id });
+                .insert({ user_id: userData.id, subbed: [] });
 
               if (error) console.log("populate users error", error);
             };
@@ -107,8 +98,9 @@ export default function Home() {
 
   return (
 <div>
-      <Following userId={user?.id} subbed={subbed}/>
-      <Dashboard userId={user?.id} subbed={subbed}/>
+      {/*<Following userId={user?.id} subbed={subbed}/>
+      <Dashboard userId={user?.id} subbed={subbed}/>*/}
+      {loading ? <div> Loading </div> : null}
       <button onClick={() => signOutUser()}>sign out</button>
     </div>
   );
