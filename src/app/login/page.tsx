@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { useRouter } from "next/navigation";
+import { fetchRedditData } from "@/utils/api-funcs";
 
 const Login = () => {
     const router = useRouter()
-
 
     supabase.auth.onAuthStateChange(async (event) => {
         console.log(event)
