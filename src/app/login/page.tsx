@@ -11,11 +11,9 @@ const Login = () => {
 
     supabase.auth.onAuthStateChange(async (event) => {
         console.log(event)
-        if(event === "SIGNED_IN") {
-            console.log('signed in')
+        if(event === "SIGNED_IN") { 
             router.push('/')
         } else {
-            console.log('signed out')
             router.push('/login')
         }
     })
