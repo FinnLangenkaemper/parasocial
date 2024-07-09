@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import { supabase } from "@/lib/supabase";
 import { setCreatorData } from "@/scripts/populateDbRunner";
@@ -10,11 +10,10 @@ import Dashboard from "./components/Dashboard"
 
 export default function Home() {
   const [user, setUser] = useState<User | null>(null);
-  const [ loading, setLoading ] =  useState(false)
-  const [ subbedArr, setSubbedArr ] = useState<String[] |  null>(null)
+  const [ loading, setLoading ] =  useState(false) 
   const router = useRouter();
 
- useEffect(() => {
+ /*useEffect(() => {
     const checkedSubbed = async () => {
       setLoading(true)
       const { data, error } = await supabase
@@ -37,9 +36,9 @@ export default function Home() {
        checkedSubbed()
     }
 
-  }, [user?.id]);
+  }, [user?.id]);*/
 
-  if(subbedArr) console.log(subbedArr)
+  //if(subbedArr) console.log(subbedArr)
 
 
 
@@ -79,6 +78,7 @@ export default function Home() {
     }
 
     getUserData();
+    console.log(user?.id)
   }, [router]);
 
 
@@ -88,20 +88,26 @@ export default function Home() {
     router.push("/login");
   }
 
-  useEffect(() => {
+  /*useEffect(() => {
     const interval = setInterval(() => {
       setCreatorData();
     }, 60 * 60 * 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, []);*/
 
   return (
-<div>
-      {/*<Following userId={user?.id} subbed={subbed}/>
-      <Dashboard userId={user?.id} subbed={subbed}/>*/}
-      {loading ? <div> Loading </div> : null}
-      <button onClick={() => signOutUser()}>sign out</button>
-    </div>
+    <>
+    {user?.id ?  (
+      <div>
+        
+        <h1> {user?.email} </h1>
+        <Following userId={user?.id}/>
+        <Dashboard userId={user?.id}/>
+        <button onClick={() => signOutUser()}>sign out</button>
+      </div>) : null}
+    
+    </>
+
   );
 }

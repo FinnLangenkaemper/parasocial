@@ -1,6 +1,7 @@
 import { creators } from "@/config/creators";
 import { supabase } from "@/lib/supabase";
 import { error } from "console";
+import { useSubbedData } from "@/hooks/custom-hooks";
 import { useState, useEffect } from "react";
 import {
   checkSubscribed,
@@ -8,13 +9,16 @@ import {
   handleUnsubscribe,
 } from "@/utils/user-funcs";
 
-const Following = ({ userId, subbed }: { userId: string | undefined, subbed: string[] }) => {
-
-  const handleSubscribe = async (creator: string, subbed: string[], userId: string | undefined ) => {
-    console.log(subbed)
+const Following = ({ userId}: { userId: string | undefined }) => {
+  const { subbedArr, loading, setLoading } = useSubbedData(userId)
 
 
-    if(userId !== undefined) {
+  const handleSubscribe = async (creator: string, subbed: String[] | null, userId: string | undefined ) => {
+    
+
+
+    if(userId !== undefined && subbed !== null) {
+        setLoading(true)
         const updatedSubbed = [...subbed, creator];
 
     const { error } = await supabase
@@ -23,6 +27,8 @@ const Following = ({ userId, subbed }: { userId: string | undefined, subbed: str
       .eq("user_id", userId);
 
     if (error) console.log(error);
+
+    setLoading(false)
     } else {
         console.error('User is not logged in, cannot subscribe')
     }
@@ -30,10 +36,11 @@ const Following = ({ userId, subbed }: { userId: string | undefined, subbed: str
 
 
   //unsubscribes you from the creator 
-  const handleUnsubscribe = async (creator: string, subbed: string[], userId: string | undefined) => {
+  const handleUnsubscribe = async (creator: string, subbed: String[] | null, userId: string | undefined) => {
 
     if(userId !== undefined) { 
-        const updatedSubbed = subbed.filter((item) => item !== creator);
+        setLoading(true)
+        const updatedSubbed = subbed?.filter((item) => item !== creator);
 
         const { error } = await supabase
         .from("users")
@@ -41,19 +48,21 @@ const Following = ({ userId, subbed }: { userId: string | undefined, subbed: str
         .eq("user_id", userId);
 
         if (error) console.log(error);
+        setLoading(false)
     } else {
         console.error('User is not logged in, cannot unsubscribe')
     }
     
     
   };
+  console.log(subbedArr)
 
   //checks if you are subbed to a creator
-  const checkSubscribed = (creator: string, subbed: string[]) => {
+  const checkSubscribed = (creator: string, subbed: String[] | null) => {
     let isSubbed = false;
-    subbed.map((item) => {
+    subbedArr?.map((item) => {
       if (item === creator) {
-        isSubbed = true;
+        isSubbed = true;  
       }
     }); return isSubbed }
 
@@ -67,15 +76,16 @@ const Following = ({ userId, subbed }: { userId: string | undefined, subbed: str
           return (
             <button
               onClick={() => {
-                checkSubscribed(creator, subbed)
-                  ? handleUnsubscribe(creator, subbed, userId)
-                  : handleSubscribe(creator, subbed, userId);
+{}                checkSubscribed(creator, subbedArr)
+                  ? handleUnsubscribe(creator, subbedArr, userId)
+                  : handleSubscribe(creator, subbedArr, userId);
               }}
               className="border-2 p-2 rounded-lg"
               key={index}
             >
               {item.creator + " "}
-              {checkSubscribed(creator, subbed) ? "subbed" : "not subbed"}
+              {checkSubscribed(creator, subbedArr) ? "subbed" : "not subbed"}
+              {loading ? 'loading...' : ''}
             </button>
           );
         })}

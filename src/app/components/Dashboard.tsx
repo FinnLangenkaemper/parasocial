@@ -2,16 +2,20 @@ import { supabase } from "@/lib/supabase";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import VideoCard from "./VideoCard";
+import { useSubbedData } from "@/hooks/custom-hooks";
 
-const Dashboard = ({ userId, subbed }: { userId: string | undefined, subbed: string[] }) => {
+const Dashboard = ({ userId  }: { userId: string | undefined  }) => {
+  const { subbedArr } = useSubbedData(userId)  
+  
   const [creatorData, setCreatorData]: any = useState();
 
   console.log('hello')
   //fetches youtube data for subbed creators
 useEffect(() => {
     const fetchVideoData = async () => {
-      if (subbed.length > 0) {
-        const promises = subbed.map(async (creator) => {
+      if(subbedArr){
+      if (subbedArr.length > 0) {
+        const promises = subbedArr.map(async (creator) => {
           const { data, error } = await supabase
             .from('creators')
             .select('creator, youtube')
@@ -28,10 +32,12 @@ useEffect(() => {
         const results = await Promise.all(promises);
         setCreatorData(results.filter(Boolean)); // Remove null results
       }
-    };
+    };}
 
     fetchVideoData();
-  }, [subbed]); 
+  }, [subbedArr]); 
+
+  if(creatorData) console.log(creatorData)
 
   return (
     <div className="py-6">
